@@ -54,7 +54,7 @@ class UI {
     static getCheckbox(props) {
         const html = `<div class="checkbox">
         <label>
-        <input class='article-checkbox' type="checkbox" value="${props.url}" name="${props.id}">
+        <input class='article-checkbox' type="checkbox" value="${props.url}" name="${props.id}" data-title="${props.title}" data-url="${props.url}">
         <span>${props.title}</span>
         </label>
         </div>`;
@@ -62,13 +62,30 @@ class UI {
     }
 
     static initializeTabList() {
+
         Browser.getCurrentWindowTabs().then((tabs) => {
+            var titleEl = $('#book-title');
+            var descEl = $('#book-description');
             tabs.forEach((tab) => {
-                $('#tab-list').append(UI.getCheckbox({
+                var nowEl = $(UI.getCheckbox({
                     title: tab.title,
                     url: tab.url,
                     id: tab.id,
                 }));
+                nowEl.find('input').change(function (){
+                    var my = $(this);
+                    if(my.is(':checked')){
+                        titleEl.val(my.data('title'));
+                        descEl.val(my.data('title') + '-' + my.data('url'));
+                    }
+                });
+                $('#tab-list').append(nowEl);
+            });
+            chrome.tabs.getSelected(function(tabs)
+            {
+                titleEl.val(tabs.title);
+                descEl.val(tabs.title + '-' + tabs.url);
+                $('.article-checkbox[name="' + tabs.id + '"]').attr("checked", true);
             });
         }).catch((error) => {
             UI.setErrorMessage(`Searching tabs failed: ${error}`);
