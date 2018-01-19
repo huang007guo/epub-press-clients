@@ -22,10 +22,19 @@ Browser.onForegroundMessage((request) => {
                 .then(() => { // eslint-disable-line
                     const email = state.email && state.email.trim();
                     const filetype = state.filetype;
-                    return email ? book.email(email, filetype) : Browser.download({
-                        filename: `${book.getTitle()}.${filetype || book.getFiletype()}`,
-                        url: book.getDownloadUrl(filetype),
-                    });
+                    try{
+                        return email ? book.email(email, filetype) : Browser.download({
+                            filename: `${book.getTitle()}.${filetype || book.getFiletype()}`,
+                            url: book.getDownloadUrl(filetype),
+                        });
+                    }catch (err){
+                        Browser.sendMessage({
+                            action: 'publish',
+                            progress: 'failed',
+                            message: err.message,
+                        });
+                        return false;
+                    }
                 })
                 .then(() => {
                     Browser.setLocalStorage({ downloadState: false, publishStatus: '{}' });

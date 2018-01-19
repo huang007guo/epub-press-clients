@@ -25463,12 +25463,20 @@
 	            return html;
 	        }
 	    }, {
+	        key: 'setFileTitle',
+	        value: function setFileTitle(props) {
+	            var titleEl = $('#book-title');
+	            var descEl = $('#book-description');
+	            props.title = props.title.replace(/\s|_/g, '-');
+	            titleEl.val(props.title);
+	            descEl.val(props.title + '-' + props.url);
+	        }
+	    }, {
 	        key: 'initializeTabList',
 	        value: function initializeTabList() {
 
 	            _browser2.default.getCurrentWindowTabs().then(function (tabs) {
-	                var titleEl = $('#book-title');
-	                var descEl = $('#book-description');
+
 	                tabs.forEach(function (tab) {
 	                    var nowEl = $(UI.getCheckbox({
 	                        title: tab.title,
@@ -25478,15 +25486,13 @@
 	                    nowEl.find('input').change(function () {
 	                        var my = $(this);
 	                        if (my.is(':checked')) {
-	                            titleEl.val(my.data('title'));
-	                            descEl.val(my.data('title') + '-' + my.data('url'));
+	                            UI.setFileTitle({ title: my.data('title'), url: my.data('url') });
 	                        }
 	                    });
 	                    $('#tab-list').append(nowEl);
 	                });
 	                chrome.tabs.getSelected(function (tabs) {
-	                    titleEl.val(tabs.title);
-	                    descEl.val(tabs.title + '-' + tabs.url);
+	                    UI.setFileTitle({ title: tabs.title, url: tabs.url });
 	                    $('.article-checkbox[name="' + tabs.id + '"]').attr("checked", true);
 	                });
 	            }).catch(function (error) {

@@ -560,10 +560,19 @@
 	                // eslint-disable-line
 	                var email = state.email && state.email.trim();
 	                var filetype = state.filetype;
-	                return email ? book.email(email, filetype) : _browser2.default.download({
-	                    filename: book.getTitle() + '.' + (filetype || book.getFiletype()),
-	                    url: book.getDownloadUrl(filetype)
-	                });
+	                try {
+	                    return email ? book.email(email, filetype) : _browser2.default.download({
+	                        filename: book.getTitle() + '.' + (filetype || book.getFiletype()),
+	                        url: book.getDownloadUrl(filetype)
+	                    });
+	                } catch (err) {
+	                    _browser2.default.sendMessage({
+	                        action: 'publish',
+	                        progress: 'failed',
+	                        message: err.message
+	                    });
+	                    return false;
+	                }
 	            }).then(function () {
 	                _browser2.default.setLocalStorage({ downloadState: false, publishStatus: '{}' });
 	                _browser2.default.sendMessage({ action: 'download', status: 'complete' });
