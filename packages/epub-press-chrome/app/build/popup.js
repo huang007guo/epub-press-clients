@@ -15060,6 +15060,10 @@
 	    });
 	    _ui2.default.showSection('#downloadForm');
 	});
+	(0, _jquery2.default)('[name="reset-btn"]').click(function () {
+	    _browser2.default.setLocalStorage({ downloadState: false, publishStatus: '{}' });
+	    _ui2.default.showSection('#downloadForm');
+	});
 
 	(0, _jquery2.default)('#settings-cancel-btn').click(function () {
 	    _ui2.default.showSection('#downloadForm');

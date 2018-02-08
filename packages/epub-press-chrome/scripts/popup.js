@@ -81,6 +81,10 @@ $('#settings-save-btn').click(() => {
     });
     UI.showSection('#downloadForm');
 });
+$('[name="reset-btn"]').click(() => {
+    Browser.setLocalStorage({ downloadState: false, publishStatus: '{}' });
+    UI.showSection('#downloadForm');
+});
 
 $('#settings-cancel-btn').click(() => {
     UI.showSection('#downloadForm');
